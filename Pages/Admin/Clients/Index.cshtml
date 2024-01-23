@@ -1,0 +1,83 @@
+﻿@page
+@model WebApplication2.Pages.Admin.Clients.IndexModel
+@{
+}
+
+<h2 class="text-center mb-55">List of Clients</h2>
+
+<div class="row mb-5">
+    <div class="col">
+        <a class="btn btn-primary" href="/Admin/Clients/Create">New Client</a>
+    </div>
+    <div class="col">
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" name="search" value="@Model.search"  placeholder="Search by Name or Email" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+
+</div>
+
+<table class="table">
+    <tr>
+        <th>Image</th>
+        <th style="cursor:pointer;" onclick="sortTable('id')">ID</th>
+        <th style="cursor:pointer;" onclick="sortTable('name')">Name</th>
+        <th style="cursor:pointer;" onclick="sortTable('email')">Email</th>
+        <th style="cursor:pointer;" onclick="sortTable('phone')">Phone</th>
+        <th style="cursor:pointer;" onclick="sortTable('address')">Address</th>
+        <th style="cursor:pointer;">Date</th>
+        <th>Action</th>
+       
+    </tr>
+
+    @foreach(var client in Model.Clients)
+    {
+        <tr>
+            <td><img src="/clients/@client.ImageFileName" width="100" /></td>
+            <td>@client.Id</td>
+            <td>@client.Name</td>
+            <td>@client.Email</td>
+            <td>@client.Phone</td>
+            <td>@client.Address</td>
+            <td>@client.Created_at.ToString("MM/dd/yy")</td>
+            <td style="white-space:nowrap">
+                <a class="btn btn-primary btn-sm" href="/Admin/Clients/Edit?id=@client.Id">Edit</a>
+                <a class="btn btn-danger btn-sm" href="/Admin/Clients/Delete?id=@client.Id">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+
+
+<nav>
+    <ul class="pagination">
+        @for (int i = 1; i <= Model.totalPages; i++)
+        {
+            string active = "";
+            if (i == Model.pageIndex) active = "active";
+
+            <li class="page-item @active" aria-current="page">
+                <a class="page-link" href="?pageIndex=@(i)&search=@(Model.search)">@i</a>
+            </li>
+        }
+    </ul>
+</nav>
+<script>
+    function sortTable(column) {
+        let orderBy = "desc";
+        let currentColumn = "@Model.column";
+        let currentOrder = "@Model.orderBy";
+
+        if (column == currentColumn) {
+            if (currentOrder == "asc") orderBy = "desc";
+            else orderBy = "asc";
+
+        }
+
+        window.location.href = "?search=@(Model.search)&column=@(Model.column)&orderBy=@(Model.orderBy);
+    }
+</script>
+
+
+
